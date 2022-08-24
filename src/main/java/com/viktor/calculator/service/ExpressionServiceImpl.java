@@ -35,17 +35,17 @@ public class ExpressionServiceImpl implements ExpressionService {
     }
 
     @Override
-    public List<ExpressionDto> findExpressionsWhereResultEquals(Double value) {
+    public List<Expression> findExpressionsWhereResultEquals(Double value) {
         return expressionRepository.findExpressionsWhereResultEquals(value);
     }
 
     @Override
-    public List<ExpressionDto> findExpressionsWhereResultIsGreaterThan(Double value) {
+    public List<Expression> findExpressionsWhereResultIsGreaterThan(Double value) {
         return expressionRepository.findExpressionsWhereResultIsGreaterThan(value);
     }
 
     @Override
-    public List<ExpressionDto> findExpressionsWhereResultIsLessThan(Double value) {
+    public List<Expression> findExpressionsWhereResultIsLessThan(Double value) {
         return expressionRepository.findExpressionsWhereResultIsLessThan(value);
     }
 

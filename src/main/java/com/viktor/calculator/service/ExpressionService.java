@@ -12,11 +12,11 @@ public interface ExpressionService {
 
     List<Expression> findAllExpressions();
 
-    List<ExpressionDto> findExpressionsWhereResultEquals(Double value);
+    List<Expression> findExpressionsWhereResultEquals(Double value);
 
-    List<ExpressionDto> findExpressionsWhereResultIsGreaterThan(Double value);
+    List<Expression> findExpressionsWhereResultIsGreaterThan(Double value);
 
-    List<ExpressionDto> findExpressionsWhereResultIsLessThan(Double value);
+    List<Expression> findExpressionsWhereResultIsLessThan(Double value);
 
     Expression findExpressionById(Long id);
 

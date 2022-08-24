@@ -15,65 +15,82 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
-@RequestMapping("/expressions/")
+@RequestMapping("/expressions")
 @RequiredArgsConstructor
 public class ExpressionController {
 
     private final ExpressionService expressionService;
 
-    @GetMapping("add")
+    @GetMapping("/add")
     public String add(Model model) {
-        model.addAttribute("expression", new Expression());
-        return "add-expression";
+        model.addAttribute("expressionDto", new ExpressionDto());
+        return "addExpression";
     }
 
-    @PostMapping("add")
-    public String processAdd(@Valid @ModelAttribute("expression") ExpressionDto expression, BindingResult bindingResult) {
+    @PostMapping("/add")
+    public String processAdd(@Valid @ModelAttribute("expressionDto") ExpressionDto expression, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "add-expression";
+            return "addExpression";
         }
         expressionService.saveExpression(expression);
-        return "redirect:list";
+        return "redirect:/expressions";
     }
 
-    @GetMapping("list")
+    @GetMapping
     public String getAll(Model model) {
         model.addAttribute("expressions", expressionService.findAllExpressions());
         return "index";
     }
 
-    @GetMapping("equals")
-    public List<ExpressionDto> getExpressionsWhereResultEquals(@RequestParam Double value) {
-        return expressionService.findExpressionsWhereResultEquals(value);
+    @GetMapping("/equals")
+    public String getExpressionsWhereResultEquals(@RequestParam(required = false) String value, Model model) {
+        if (value == null) {
+            model.addAttribute("expressions", expressionService.findAllExpressions());
+        } else {
+            double v = Double.parseDouble(value);
+            model.addAttribute("expressions", expressionService.findExpressionsWhereResultEquals(v));
+        }
+        return "equals";
     }
 
-    @GetMapping("greaterThan")
-    public List<ExpressionDto> getExpressionsWhereResultGreaterThan(@RequestParam Double value) {
-        return expressionService.findExpressionsWhereResultIsGreaterThan(value);
+    @GetMapping("/greaterThan")
+    public String getExpressionsWhereResultGreaterThan(@RequestParam(required = false) String value, Model model) {
+        if (value == null) {
+            model.addAttribute("expressions", expressionService.findAllExpressions());
+        } else {
+            double v = Double.parseDouble(value);
+            model.addAttribute("expressions", expressionService.findExpressionsWhereResultIsGreaterThan(v));
+        }
+        return "greater";
     }
 
-    @GetMapping("lessThan")
-    public List<ExpressionDto> getExpressionsWhereResultLessThan(@RequestParam Double value) {
-        return expressionService.findExpressionsWhereResultIsLessThan(value);
+    @GetMapping("/lessThan")
+    public String getExpressionsWhereResultLessThan(@RequestParam(required = false) String value, Model model) {
+        if (value == null) {
+            model.addAttribute("expressions", expressionService.findAllExpressions());
+        } else {
+            double v = Double.parseDouble(value);
+            model.addAttribute("expressions", expressionService.findExpressionsWhereResultIsLessThan(v));
+        }
+        return "less";
     }
 
-    @GetMapping("edit/{id}")
+    @GetMapping("/edit/{id}")
     public String getById(@PathVariable("id") Long id, Model model) {
         Expression expressionById = expressionService.findExpressionById(id);
         model.addAttribute("expression", expressionById);
         return "update-expression";
     }
 
-    @GetMapping("update/{id}")
+    @GetMapping("/update/{id}")
     public String update(@PathVariable("id") Long id, Model model) {
         model.addAttribute("expression", new Expression());
         return "update-expression";
     }
 
-    @PostMapping("update/{id}")
+    @PostMapping("/update/{id}")
     public String updateProcess(@PathVariable("id") Long id, @Valid @ModelAttribute("expression") ExpressionDto expression, Model model, BindingResult result) {
         if (result.hasErrors()) {
             return "update-expression";
@@ -83,7 +100,7 @@ public class ExpressionController {
         return "index";
     }
 
-    @GetMapping("delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id, Model model) {
         expressionService.deleteById(id);
         model.addAttribute("expressions", expressionService.findAllExpressions());
