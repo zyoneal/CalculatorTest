@@ -41,31 +41,6 @@ class ExpressionControllerTest {
     private final String URI = "/expressions";
 
     @Test
-    void saveExpressionOk() throws Exception {
-        String expression = "5+5";
-        ExpressionDto expressionDto = new ExpressionDto();
-        expressionDto.setExpression(expression);
-
-        Expression expressionObj = new Expression();
-        expressionObj.setExpression(expression);
-        expressionObj.setResult(10.0);
-        when(expressionService.saveExpression(any(ExpressionDto.class))).thenReturn(expressionObj);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter objectWriter = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = objectWriter.writeValueAsString(expressionDto);
-
-        mockMvc.perform(post(URI + "/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().is(302))
-                .andDo(MockMvcResultHandlers.print());
-
-        verify(expressionService, times(1)).saveExpression(any(ExpressionDto.class));
-    }
-
-    @Test
     void findAllExpressionOk() throws Exception {
         Expression e1 = Expression.builder()
                 .id(1L)
@@ -92,23 +67,6 @@ class ExpressionControllerTest {
 
     @Test
     void DeleteById_ShouldDeleteExpression() throws Exception {
-        Expression e1 = Expression.builder()
-                .id(1L)
-                .expression("20+5")
-                .result(25.0)
-                .build();
-
-        doNothing().when(expressionService).deleteById(e1.getId());
-
-        mockMvc.perform(MockMvcRequestBuilders.get(URI + "/delete/" + e1.getId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print());
-
-        verify(expressionService, times(1)).deleteById(anyLong());
-    }
-
-    @Test
-    void updateById_ShouldUpdateExpression() throws Exception {
         Expression e1 = Expression.builder()
                 .id(1L)
                 .expression("20+5")
