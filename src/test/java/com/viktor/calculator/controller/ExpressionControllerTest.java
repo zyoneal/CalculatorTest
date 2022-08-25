@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = ExpressionController.class)
 @Import(ExpressionController.class)
-public class ExpressionControllerTest {
+class ExpressionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -82,7 +82,7 @@ public class ExpressionControllerTest {
         List<Expression> list = List.of(e1, e2);
         when(expressionService.findAllExpressions()).thenReturn(list);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URI + "/list"))
+        mockMvc.perform(MockMvcRequestBuilders.get(URI))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
                 .andDo(MockMvcResultHandlers.print());
@@ -112,7 +112,7 @@ public class ExpressionControllerTest {
         Expression e1 = Expression.builder()
                 .id(1L)
                 .expression("20+5")
-                .result(25.)
+                .result(25.0)
                 .build();
 
         doNothing().when(expressionService).deleteById(e1.getId());
@@ -160,6 +160,5 @@ public class ExpressionControllerTest {
 
         verify(expressionService, times(1)).updateExpression(any(), any(ExpressionDto.class));
     }
-
 
 }

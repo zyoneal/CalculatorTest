@@ -61,7 +61,7 @@ class ExpressionControllerIT {
     void getAddExpressionPage_isOk() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get(this.URI))
                 .andExpect(status().isOk())
-                .andExpect(view().name("add-expression"))
+                .andExpect(view().name("addExpression"))
                 .andDo(print());
     }
 
@@ -79,7 +79,7 @@ class ExpressionControllerIT {
                 .perform(MockMvcRequestBuilders.post(URI)
                 .contentType(APPLICATION_JSON_UTF8).content(requestJson))
                 .andExpect(status().is(302))
-                .andExpect(view().name("redirect:list"))
+                .andExpect(view().name("redirect:/expressions"))
                 .andDo(print());
     }
 
