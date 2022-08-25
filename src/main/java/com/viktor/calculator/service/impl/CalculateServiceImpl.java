@@ -104,7 +104,6 @@ public class CalculateServiceImpl implements CalculateService {
     }
 
     private static List<String> parseExpression(String s) {
-
         Matcher m = EXPRESSION_PART_PATTERN.matcher(s);
 
         List<String> parsed = new ArrayList<>();

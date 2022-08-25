@@ -3,6 +3,7 @@ package com.viktor.calculator.controller;
 import com.viktor.calculator.dto.ExpressionDto;
 import com.viktor.calculator.entity.Expression;
 import com.viktor.calculator.service.ExpressionService;
+import com.viktor.calculator.util.InputValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/expressions")
@@ -30,9 +32,14 @@ public class ExpressionController {
     }
 
     @PostMapping("/add")
-    public String processAdd(@Valid @ModelAttribute("expressionDto") ExpressionDto expression, BindingResult bindingResult) {
+    public String processAdd(@Valid @ModelAttribute("expressionDto") ExpressionDto expression, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "addExpression";
+        }
+        String valid = InputValidator.validInputExpression(expression.getExpression());
+        if (!valid.isEmpty()) {
+            model.addAttribute("errorMessage", valid);
+            return "error";
         }
         expressionService.saveExpression(expression);
         return "redirect:/expressions";
@@ -48,7 +55,14 @@ public class ExpressionController {
     public String getExpressionsWhereResultEquals(@RequestParam(required = false) String value, Model model) {
         if (value == null) {
             model.addAttribute("expressions", expressionService.findAllExpressions());
-        } else {
+            return "equals";
+        }
+        String valid = InputValidator.validInputValue(value);
+        if (!valid.isEmpty()) {
+            model.addAttribute("errorMessage", valid);
+            return "error";
+        }
+        else {
             double v = Double.parseDouble(value);
             model.addAttribute("expressions", expressionService.findExpressionsWhereResultEquals(v));
         }
@@ -59,7 +73,14 @@ public class ExpressionController {
     public String getExpressionsWhereResultGreaterThan(@RequestParam(required = false) String value, Model model) {
         if (value == null) {
             model.addAttribute("expressions", expressionService.findAllExpressions());
-        } else {
+            return "greater";
+        }
+        String valid = InputValidator.validInputValue(value);
+        if (!valid.isEmpty()) {
+            model.addAttribute("errorMessage", valid);
+            return "error";
+        }
+        else {
             double v = Double.parseDouble(value);
             model.addAttribute("expressions", expressionService.findExpressionsWhereResultIsGreaterThan(v));
         }
@@ -70,7 +91,14 @@ public class ExpressionController {
     public String getExpressionsWhereResultLessThan(@RequestParam(required = false) String value, Model model) {
         if (value == null) {
             model.addAttribute("expressions", expressionService.findAllExpressions());
-        } else {
+            return "greater";
+        }
+        String valid = InputValidator.validInputValue(value);
+        if (!valid.isEmpty()) {
+            model.addAttribute("errorMessage", valid);
+            return "error";
+        }
+        else {
             double v = Double.parseDouble(value);
             model.addAttribute("expressions", expressionService.findExpressionsWhereResultIsLessThan(v));
         }
